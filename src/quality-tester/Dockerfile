@@ -1,6 +1,6 @@
 FROM python:3.10-alpine
 LABEL org-opencontainer.image.authors="jan@macenka.de"
-LABEL maintainer="macenka@roi.de"
+LABEL maintainer="jan@macenka.de"
 WORKDIR /code
 COPY ./requirements.txt .
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
