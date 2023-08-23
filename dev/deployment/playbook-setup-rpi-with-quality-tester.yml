@@ -6,16 +6,6 @@
     - credentials.yml
 
   tasks:
-    - name: Copy background image
-      copy:
-        src: ./wallpaper.png
-        dest: /home/pi/Documents/wallpaper.png
-      become_user: pi
-
-    # - name: Set desktop wallpaper image
-    #   command: gsettings set org.gnome.desktop.wallpaper picture-uri "file:///home/pi/Documents/wallpaper.png"
-    #   become_user: pi
-
     - name: Update and upgrade the system
       apt:
         upgrade: yes
@@ -27,7 +17,20 @@
           - git
           - python3
           - python3-pip
+          - pcmanfm
         state: present
+
+    - name: Copy background image
+      copy:
+        src: ./wallpaper.png
+        dest: /home/pi/Documents/wallpaper.png
+      become_user: pi
+
+    # - name: Launch pcmanfm with image
+    #   shell: pcmanfm -w /home/pi/Documents/wallpaper.png
+    #   environment:
+    #     DISPLAY=:0.0
+    #   become_user: pi
 
     - name: Clone the repository
       git:
@@ -46,9 +49,16 @@
         path: /boot/config.txt
         line: "{{ item }}"
       loop:
-        - hdmi_group=2
-        - hdmi_mode=16
         - gpu_mem=256
+
+        # Resolution 1600x900
+        - hdmi_cvt=1600 900 60
+        - hdmi_group=2
+        - hdmi_mode=87
+
+        # # Resolution 1024x768
+        # - hdmi_group=2
+        # - hdmi_mode=16
 
     - name: Copy quality-tester.service
       template:
@@ -61,20 +71,8 @@
         enabled: yes
         state: started
 
-    # - name: Copy delayed-browser-launch.service
-    #   template:
-    #     src: delayed-browser-launch.service.j2
-    #     dest: /etc/systemd/system/delayed-browser-launch.service
-
-    # - name: Start and enable delayed browser launch service
-    #   systemd:
-    #     name: delayed-browser-launch
-    #     enabled: yes
-    #     state: started
-
     - name: Create autostart directory
       file:
-        # path: "{{ ansible_env.HOME }}/.config/autostart"
         path: "/home/pi/.config/autostart/"
         state: directory
 
