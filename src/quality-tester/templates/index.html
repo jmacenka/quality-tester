@@ -2,8 +2,6 @@
 <html>
 <head>
     <title>EOL Quality Check</title>
-    <!-- Import Google Icon Font -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Import materialize.css -->
     <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/materialize.min.css') }}"  media="screen,projection"/>
 
@@ -13,7 +11,7 @@
 
     <style>
         .container {
-            margin-top: 10%;
+            margin-top: 1.5%;
         }
         footer {
             position: fixed;
@@ -24,6 +22,20 @@
             color: white;
             text-align: center;
         }
+        .scaled-logo {
+            height: 13px;
+            vertical-align: middle;
+        }
+        .scaled-title {
+            font-size: 18px;
+        }
+        .scaled-button {
+            font-size: 8px;
+        }
+        .scaled-footer {
+            padding: 2px;
+            font-size: 8px;
+        }
     </style>
 
 </head>
@@ -32,8 +44,7 @@
     <nav>
         <div class="nav-wrapper blue">
             <a href="#" class="brand-logo">
-                <img src="static/img/logo.png" alt="logo" height="60" style="padding: 5px;">
-                {{ COMPANY_NAME}}
+                <img src="static/img/logo.svg" alt="logo" height="60" style="padding: 5px;">
             </a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><a href="#">Load next Job</a></li>
@@ -44,10 +55,10 @@
     </nav>
 
     <div class="container content-justify">
-        <h1 class="center-align">End of line quality control</h1>
+        <h2 class="center-align">End Of Line Quality Control</h2>
 
         <div class="row center-align">
-            <button id="check-software-button" class="btn-large waves-effect waves-light">Check Software</button>
+            <button id="check-software-button" class="btn-large waves-effect waves-light">Run Quality Check</button>
         </div>
 
         <div id="loading" class="row center-align" style="display: none;">
@@ -78,10 +89,7 @@
             // Show the loading bar
             document.getElementById('loading').style.display = 'block';
 
-            // This is where you would implement the client-side code to check for the USB stick and compare images.
-            // After performing the checks, you would send the data to the Flask server for processing.
-
-            // Calculate a random loading time between 10 and 20 seconds
+            // Calculate a random loading time
             var loadingTime = Math.random() * {{ MAX_RANDOM_LOAD_TIME_MS }} + {{ MIN_LOAD_TIME_MS }}
 
             // Wait for the loading time before sending the request

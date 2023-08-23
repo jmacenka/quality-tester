@@ -11,5 +11,6 @@ services:
       - /dev:/dev
       - /media:/media
     privileged: true
+    user: 1000:1000
     ports:
       - 80:80

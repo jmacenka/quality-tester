@@ -9,8 +9,8 @@ import random
 # General Parameters
 render_context = {
     "COMPANY_NAME": "KOSTAL",
-    "MIN_LOAD_TIME_MS": 1000,
-    "MAX_RANDOM_LOAD_TIME_MS": 1000,
+    "MIN_LOAD_TIME_MS": 5000,
+    "MAX_RANDOM_LOAD_TIME_MS": 10000,
 }
 
 random_check_success_rate = 0.9 # 0.9 means 90% of test will pass if device is connected and 10% will be fails at random
@@ -71,7 +71,7 @@ def check_software():
         if img_compare_check and random.random() < random_check_success_rate:
             return jsonify({"result": "Check Successful", "reason":f"Test completed. Tested product: {foto_name.split('.')[0]}", "picture": f"static/target_pics/{foto_name}"})
         else:
-            return jsonify({"result": "Check Failed", "reason": "Measuring results do not match."})
+            return jsonify({"result": "Check Failed", "reason": "Measuring results do not match any known product."})
     else:
         return jsonify({"result": "Check Failed", "reason": "Device was not detected"})
 
