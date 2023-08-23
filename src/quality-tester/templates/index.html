@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EOL Quality Check</title>
+    <!-- Import Google Icon Font -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Import materialize.css -->
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"  media="screen,projection"/>
+
+    <!-- Let browser know website is optimized for mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <style>
+        .container {
+            margin-top: 10%;
+        }
+        footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: #2196f3;
+            color: white;
+            text-align: center;
+        }
+    </style>
+
+</head>
+<body>
+    <!-- Navbar -->
+    <nav>
+        <div class="nav-wrapper blue">
+            <a href="#" class="brand-logo">
+                <img src="static/img/logo.png" alt="logo" height="60" style="padding: 5px;">
+                {{ COMPANY_NAME}}
+            </a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="#">Load next Job</a></li>
+                <li><a href="#">To MES System</a></li>
+                <li><a href="#">To ERP System</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container content-justify">
+        <h1 class="center-align">End of line quality control</h1>
+
+        <div class="row center-align">
+            <button id="check-software-button" class="btn-large waves-effect waves-light">Check Software</button>
+        </div>
+
+        <div id="loading" class="row center-align" style="display: none;">
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+
+        <div id="result" class="row center-align"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer blue">
+        <div class="container">
+            <p class="center-align" style="padding: 10px">&copy; <script>document.write(new Date().getFullYear());</script> {{ COMPANY_NAME }}</p>
+        </div>
+    </footer>
+
+    <!-- Import jQuery and then materialize.js-->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.1.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
+    
+
+    <script type="text/javascript">
+        document.getElementById('check-software-button').addEventListener('click', function() {
+            // Clear previous check
+            document.getElementById('result').innerHTML = '';
+            // Show the loading bar
+            document.getElementById('loading').style.display = 'block';
+
+            // This is where you would implement the client-side code to check for the USB stick and compare images.
+            // After performing the checks, you would send the data to the Flask server for processing.
+
+            // Calculate a random loading time between 10 and 20 seconds
+            var loadingTime = Math.random() * {{ MAX_RANDOM_LOAD_TIME_MS }} + {{ MIN_LOAD_TIME_MS }}
+
+            // Wait for the loading time before sending the request
+            setTimeout(function() {
+                // Hide the loading bar
+                document.getElementById('loading').style.display = 'none';
+
+                // Send request to Flask server
+                fetch('/check_software', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        // This is where you would include the image data from the USB stick
+                        image: null
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    var resultDiv = document.getElementById('result');
+                    if (data.result === 'Check Successful') {
+                        resultDiv.innerHTML = '<h3 class="green-text">' + data.result + '</h3>';
+                        if (data.reason) {
+                            resultDiv.innerHTML += '<p>' + data.reason + '</p>';
+                        }
+                        if (data.picture) {
+                            resultDiv.innerHTML += '<img src="'+data.picture+'" style="width: 10rem">';
+                        }
+                    } else {
+                        resultDiv.innerHTML = '<h3 class="red-text">' + data.result + '</h3>';
+                        if (data.reason) {
+                            resultDiv.innerHTML += '<p>' + data.reason + '</p>';
+                        }
+                    }
+                });
+            }, loadingTime);
+        });
+    </script>
+</body>
+</html>

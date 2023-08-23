@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  infranexus:
+    container_name: quality-tester
+    build:
+      context: ./quality-tester
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - /dev:/dev
+      - /media:/media
+    privileged: true
+    ports:
+      - 80:80
