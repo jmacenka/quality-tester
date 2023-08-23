@@ -84,7 +84,7 @@
           [Desktop Entry]
           Type=Application
           Name=Start Browser
-          Exec=sh -c "sleep 60 && xdg-open http://localhost:8080"
+          Exec=sh -c "xdg-open http://localhost:8080"
           X-GNOME-Autostart-enabled=true
 
         dest: /home/pi/.config/autostart/start_browser.desktop
