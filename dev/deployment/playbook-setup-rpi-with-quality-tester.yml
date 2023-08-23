@@ -1,0 +1,94 @@
+---
+- name: Configure Raspberry Pi systems
+  hosts: raspberry-pi-inventory
+  become: yes
+  vars_files:
+    - credentials.yml
+
+  tasks:
+    - name: Copy background image
+      copy:
+        src: ./wallpaper.png
+        dest: /home/pi/Documents/wallpaper.png
+      become_user: pi
+
+    # - name: Set desktop wallpaper image
+    #   command: gsettings set org.gnome.desktop.wallpaper picture-uri "file:///home/pi/Documents/wallpaper.png"
+    #   become_user: pi
+
+    - name: Update and upgrade the system
+      apt:
+        upgrade: yes
+        update_cache: yes
+
+    - name: Install required packages
+      apt:
+        name:
+          - git
+          - python3
+          - python3-pip
+        state: present
+
+    - name: Clone the repository
+      git:
+        repo: https://github.com/jmacenka/quality-tester
+        dest: /home/pi/quality-tester
+        clone: yes
+      become_user: pi
+
+    - name: Install Python requirements
+      pip:
+        requirements: /home/pi/quality-tester/src/quality-tester/requirements.txt
+      become_user: pi
+
+    - name: Ensure config values in /boot/config.txt
+      lineinfile:
+        path: /boot/config.txt
+        line: "{{ item }}"
+      loop:
+        - hdmi_group=2
+        - hdmi_mode=16
+        - gpu_mem=256
+
+    - name: Copy quality-tester.service
+      template:
+        src: quality-tester.service.j2
+        dest: /etc/systemd/system/quality-tester.service
+
+    - name: Start and enable quality-tester service
+      systemd:
+        name: quality-tester
+        enabled: yes
+        state: started
+
+    # - name: Copy delayed-browser-launch.service
+    #   template:
+    #     src: delayed-browser-launch.service.j2
+    #     dest: /etc/systemd/system/delayed-browser-launch.service
+
+    # - name: Start and enable delayed browser launch service
+    #   systemd:
+    #     name: delayed-browser-launch
+    #     enabled: yes
+    #     state: started
+
+    - name: Create autostart directory
+      file:
+        # path: "{{ ansible_env.HOME }}/.config/autostart"
+        path: "/home/pi/.config/autostart/"
+        state: directory
+
+    - name: Create start_browser.desktop script
+      copy:
+        content: |
+          [Desktop Entry]
+          Type=Application
+          Name=Start Browser
+          Exec=sh -c "sleep 60 && xdg-open http://localhost:8080"
+          X-GNOME-Autostart-enabled=true
+
+        dest: /home/pi/.config/autostart/start_browser.desktop
+
+    - name: Reboot the device
+      reboot:
+        reboot_timeout: 3600

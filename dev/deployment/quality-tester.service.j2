@@ -1,0 +1,13 @@
+[Unit]
+Description=Quality Tester Web-App
+After=network.target
+
+[Service]
+User=pi
+WorkingDirectory=/home/pi/quality-tester/src/quality-tester
+Environment="PATH=/usr/bin/python3:$PATH"
+ExecStart=/home/pi/.local/bin/gunicorn -b 0.0.0.0:8080 -w 2 main:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

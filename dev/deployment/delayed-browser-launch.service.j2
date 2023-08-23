@@ -1,0 +1,10 @@
+[Unit]
+Description=Delayed Browser Launch
+After=graphical.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sleep 60 && /usr/bin/xdg-open http://localhost:8080
+
+[Install]
+WantedBy=default.target
