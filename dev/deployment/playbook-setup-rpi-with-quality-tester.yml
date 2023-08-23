@@ -51,14 +51,14 @@
       loop:
         - gpu_mem=256
 
-        # Resolution 1600x900
-        - hdmi_cvt=1600 900 60
-        - hdmi_group=2
-        - hdmi_mode=87
-
-        # # Resolution 1024x768
+        # # Resolution 1600x900
+        # - hdmi_cvt=1600 900 60
         # - hdmi_group=2
-        # - hdmi_mode=16
+        # - hdmi_mode=87
+
+        # Resolution 1024x768
+        - hdmi_group=2
+        - hdmi_mode=16
 
     - name: Copy quality-tester.service
       template:
