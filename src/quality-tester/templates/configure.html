@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Configure</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/materialize.min.css') }}">
+</head>
+<body>
+    <nav>
+        <div class="nav-wrapper blue">
+            <a href="/" class="brand-logo">
+                <img src="static/img/{{ logo_name }}" alt="{{ company_name }}" height="60" style="padding: 5px;">
+            </a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="#">To MES System</a></li>
+                <li><a href="#">To ERP System</a></li>
+                <li><a href="/">Back to Application</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <h1 class="center-align">Configuration Page</h1>
+        <div class="row">
+            <h2 class="center-align">Software Parameters</h2>
+            <form class="col s12" method="POST">
+                <div class="input-field col s12">
+                    <input id="success-rate" type="number" name="success-rate" value="{{ success_rate }}" required>
+                    <label for="success-rate">Success Rate in %</label>
+                </div>
+                <div class="input-field col s12">
+                    <input id="company-name" type="text" name="company-name" value="{{ company_name }}" required>
+                    <label for="company-name">Company Name</label>
+                </div>
+                <div class="input-field col s12">
+                    <input id="min-wait-time" type="number" name="min-wait-time" value="{{ min_wait_time }}" required>
+                    <label for="min-wait-time">Minimum Wait Time in milliseconds</label>
+                </div>
+                <div class="input-field col s12">
+                    <input id="max-wait-time" type="number" name="max-wait-time" value="{{ max_wait_time }}" required>
+                    <label for="max-wait-time">Maximum Wait Time in milliseconds</label>
+                </div>
+                <div class="input-field col s12">
+                    <input id="password" type="password" name="password" required>
+                    <label for="password">Password</label>
+                </div>
+                <div class="input-field col s12">
+                    <button class="btn waves-effect waves-light" type="submit" name="update-params">Save Configuration</button>
+                </div>
+            </form>
+        </div>
+        <div class="row">
+            <h2 class="center-align">Target Pictures</h2>
+            <ul class="collection">
+                {% for pic in pics %}
+                    <li class="collection-item">
+                        <h5>{{ pic }}</h5>
+                        <img src="{{ url_for('static', filename='target_pics/' + pic) }}" alt="{{ pic }}" class="responsive-img" height="100">
+                        <form method="POST" action="{{ url_for('delete_pic', filename=pic) }}">
+                            <!-- <label for="password-upload-{{ pic }}">Password</label> -->
+                            <input id="password-upload-{{ pic }}" type="password" placeholder="password" name="password" required>
+                            <button class="btn waves-effect waves-light red" type="submit">Delete</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="row">
+            <h2 class="center-align">Upload New Target Picture</h2>
+            <form class="col s12" method="POST" action="{{ url_for('configure') }}" enctype="multipart/form-data">
+                <div class="input-field col s12">
+                    <input type="file" name="file" accept="image/*" required>
+                </div>
+                <div class="input-field col s12">
+                    <input id="password-upload" type="password" name="password" required>
+                    <label for="password-upload">Password</label>
+                </div>
+                <div class="input-field col s12">
+                    <button class="btn waves-effect waves-light" type="submit" name="upload-file">Upload</button>
+                </div>
+            </form>
+        </div>
+        <div class="row">
+            <h2 class="center-align">Update Company Logo</h2>
+            <img src="/static/img/{{ logo_name }}" alt="Logo" class="responsive-img" height="100">
+            <form class="col s12" method="POST" action="{{ url_for('upload_logo') }}" enctype="multipart/form-data">
+                <div class="input-field col s12">
+                    <input type="file" name="file" accept="image/*" required>
+                </div>
+                <div class="input-field col s12">
+                    <input id="password-logo" type="password" name="password" required>
+                    <label for="password-logo">Password</label>
+                </div>
+                <div class="input-field col s12">
+                    <button class="btn waves-effect waves-light" type="submit">Upload new Logo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
+</body>
+</html>

@@ -42,13 +42,13 @@
     <!-- Navbar -->
     <nav>
         <div class="nav-wrapper blue">
-            <a href="#" class="brand-logo">
-                <img src="static/img/logo.svg" alt="logo" height="60" style="padding: 5px;">
+            <a href="/" class="brand-logo">
+                <img src="static/img/{{ logo_name }}" alt="{{ company_name }}" height="60" style="padding: 5px;">
             </a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="/configure">Configure Software Test</a></li>
                 <li><a href="#">To MES System</a></li>
                 <li><a href="#">To ERP System</a></li>
+                <li><a id="protected-link" href="/configure">Configure Software Test</a></li>
             </ul>
         </div>
     </nav>
@@ -83,13 +83,6 @@
         <div id="result" class="row center-align"></div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer blue">
-        <div class="container">
-            <p class="center-align" style="padding: 10px">Licensed to {{ COMPANY_NAME }}</p>
-        </div>
-    </footer>
-
     <!-- Import jQuery and then materialize.js-->
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.1.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
@@ -105,7 +98,7 @@
             document.getElementById('loading').style.display = 'block';
 
             // Calculate a random loading time
-            var loadingTime = Math.random() * {{ MAX_RANDOM_LOAD_TIME_MS }} + {{ MIN_LOAD_TIME_MS }}
+            var loadingTime = Math.random() * {{ max_wait_time - min_wait_time }} + {{ min_wait_time }}
 
             // Wait for the loading time before sending the request
             setTimeout(function() {
@@ -138,6 +131,28 @@
                     }
                 });
             }, loadingTime);
+        });
+    </script>
+
+    <!-- Script for protected link -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const protectedLink = document.getElementById('protected-link');
+            
+            protectedLink.addEventListener('click', function (event) {
+                event.preventDefault(); // Prevent the default link behavior
+
+                const enteredPassword = prompt('Enter the password:', type="password");
+                const correctPassword = '{{ password }}'; // Replace with your actual password
+                
+                if (enteredPassword === correctPassword) {
+                    // Password is correct, navigate to the link
+                    window.location.href = protectedLink.href;
+                } else {
+                    // Password is incorrect, show an alert
+                    alert('Incorrect password. Access denied.');
+                }
+            });
         });
     </script>
 </body>
