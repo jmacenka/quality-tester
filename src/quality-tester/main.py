@@ -62,16 +62,20 @@ app = Flask(__name__)
 # Routes
 @app.route('/')
 def home():
+    list_of_allowed_images = os.listdir('./static/target_pics')
+    render_context['allowed_images']=list_of_allowed_images
     return render_template('index.html', **render_context)
 
 @app.route('/check_software', methods=['POST','GET'])
 def check_software():
     if check_usb():
         img_compare_check, foto_name = compare_images()
-        if img_compare_check and random.random() < random_check_success_rate:
+        selected_image = request.form.get('selected_image')  # Get the selected image from the form
+
+        if img_compare_check and random.random() < random_check_success_rate and foto_name == selected_image:
             return jsonify({"result": "Check Successful", "reason":f"Test completed. Tested product: {foto_name.split('.')[0]}", "picture": f"static/target_pics/{foto_name}"})
         else:
-            return jsonify({"result": "Check Failed", "reason": "Measuring results do not match any known product."})
+            return jsonify({"result": "Check Failed", "reason": "Measuring results do not match."})
     else:
         return jsonify({"result": "Check Failed", "reason": "Device was not detected"})
 
