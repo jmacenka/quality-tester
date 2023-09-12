@@ -91,14 +91,17 @@ def check_software():
 
         # Generate random role to simulate software-check failing randomly
         random_role = random.random()
+        result = ''
         success_rate = config['success_rate']/100
-
-        if img_compare_check and random_role <= success_rate and foto_name == selected_image:
+        if config['simulate_pictures']:
+            result = jsonify({"result": "Check Successful", "reason":f"Test completed. Tested product: {selected_image}", "picture": f"static/target_pics/{selected_image}"})
+        elif img_compare_check and random_role <= success_rate and foto_name == selected_image:
             return jsonify({"result": "Check Successful", "reason":f"Test completed. Tested product: {foto_name.split('.')[0]}", "picture": f"static/target_pics/{foto_name}"})
         else:
             return jsonify({"result": "Check Failed", "reason": "Measuring results do not match."})
     else:
         return jsonify({"result": "Check Failed", "reason": f"Device was not detected"})
+    return result
 
 @app.route('/configure', methods=['GET','POST'])
 def configure():
@@ -120,6 +123,11 @@ def configure():
         config['company_name'] = request.form.get('company-name')
         config['min_wait_time'] = int(request.form.get('min-wait-time'))
         config['max_wait_time'] = int(request.form.get('max-wait-time'))
+        if request.form.get('simulate_pictures') == "on":
+            config['simulate_pictures'] = True
+        else:
+            config['simulate_pictures'] = False
+
 
         # Persist updated config to file
         with open(config_file_path, 'w') as config_file:

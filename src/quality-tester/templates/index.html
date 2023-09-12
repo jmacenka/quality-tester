@@ -60,14 +60,14 @@
         
         <form id="software-check-form">
             <div class="row center-align">
-                {% for image in allowed_images %}
-                <p>
-                    <label>
-                        <input name="selected_image" type="radio" value="{{ image }}" />
-                        <span>{{ image.split('.')[0] }}</span>
-                    </label>
-                </p>
-                {% endfor %}
+                <div class="input-field col s6 offset-s3">
+                    <select name="selected_image">
+                        {% for image in allowed_images %}
+                            <option value="{{ image }}">{{ image.split('.')[0] }}</option>
+                        {% endfor %}
+                    </select>
+                    <!-- <label>Select Product Image</label> -->
+                </div>
             </div>
     
             <div class="row center-align">
@@ -87,7 +87,13 @@
     <!-- Import jQuery and then materialize.js-->
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.1.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
-    
+    <!-- Initialize the dropdown selection -->
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('select');
+            var instances = M.FormSelect.init(elems);
+        });
+    </script>
     <!-- Process for loading bar and handling of return values -->
     <script type="text/javascript">
         document.getElementById('software-check-form').addEventListener('submit', function(event) {

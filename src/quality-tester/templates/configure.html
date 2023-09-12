@@ -3,6 +3,7 @@
 <head>
     <title>Configure</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/materialize.min.css') }}">
+
 </head>
 <body>
     <nav>
@@ -22,7 +23,30 @@
         <div class="row">
             <h2 class="center-align">Software Parameters</h2>
             <form class="col s12" method="POST">
-                <div class="input-field col s12">
+
+                <!-- <div class="input-field col s12">
+                    <select name="simulate_pictures">
+                        <option value="True">ON</option>
+                        <option value="False">OFF</option>
+                    </select>
+                    <label for="simulate_pictures">Dummy Simulation, will not actually check pictures but just simulate a test result anyways</label>
+                </div> -->
+                <div name="dummy-simulation">
+                    <label for="dummy-simulation">Picture Check Mode</label>
+                    <p >
+                        <label>
+                          <input name="simulate_pictures" type="radio" {% if simulate_pictures %}checked{% endif %} value="on"/>
+                          <span>On - Softwarecheck will return Pass purely by the configured chance and ignore if the correct picture is present</span>
+                        </label>
+                      </p>
+                      <p>
+                        <label>
+                          <input name="simulate_pictures" type="radio" {% if not simulate_pictures %}checked{% endif %} value="off"/>
+                          <span>Off - Softwarecheck will only return Pass if the selected picture is found on the USB-stick</span>
+                        </label>
+                    </p>
+                    <div class="input-field col s12">
+                </div>
                     <input id="success-rate" type="number" name="success-rate" value="{{ success_rate }}" required>
                     <label for="success-rate">Success Rate in %</label>
                 </div>
@@ -38,6 +62,10 @@
                     <input id="max-wait-time" type="number" name="max-wait-time" value="{{ max_wait_time }}" required>
                     <label for="max-wait-time">Maximum Wait Time in milliseconds</label>
                 </div>
+                <!-- <div class="input-field col s12">
+                    <input id="simulate-pictures" type="bool" name="simulate-pictures" required>
+                    <label for="simulate-pictures">Simulate Pictures</label>
+                </div> -->
                 <div class="input-field col s12">
                     <input id="password" type="password" name="password" required>
                     <label for="password">Password</label>
