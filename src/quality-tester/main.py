@@ -41,7 +41,8 @@ def check_usb():
     Returns
         bool: True if device is connected, False otherwise
     """
-    return len(os.listdir(f'/media/{os.getenv("USER",config.get("default_user", "pi"))}')) != 0
+    usb_dir = f'/media/{os.getenv("USER",config.get("default_user", "pi"))}'
+    return os.path.exists(usb_dir) and len(os.listdir(usb_dir)) != 0
 
 def compare_images():
     """
@@ -82,7 +83,7 @@ def home():
     config['allowed_images']=list_of_allowed_images
     return render_template('index.html', **config)
 
-@app.route('/check_software', methods=['POST'])
+@app.route('/check_software', methods=['POST','GET'])
 def check_software():
     if check_usb():
         config = load_config_context()
@@ -91,17 +92,16 @@ def check_software():
 
         # Generate random role to simulate software-check failing randomly
         random_role = random.random()
-        result = ''
         success_rate = config['success_rate']/100
-        if config['simulate_pictures']:
-            result = jsonify({"result": "Check Successful", "reason":f"Test completed. Tested product: {selected_image}", "picture": f"static/target_pics/{selected_image}"})
+        if config['simulate_pictures'] and random_role <= success_rate:
+            return jsonify({"result": "Check Successful", "reason":f"Test completed. Tested product: {selected_image}", "picture": f"static/target_pics/{selected_image}"})
         elif img_compare_check and random_role <= success_rate and foto_name == selected_image:
             return jsonify({"result": "Check Successful", "reason":f"Test completed. Tested product: {foto_name.split('.')[0]}", "picture": f"static/target_pics/{foto_name}"})
         else:
             return jsonify({"result": "Check Failed", "reason": "Measuring results do not match."})
     else:
         return jsonify({"result": "Check Failed", "reason": f"Device was not detected"})
-    return result
+    return 
 
 @app.route('/configure', methods=['GET','POST'])
 def configure():
