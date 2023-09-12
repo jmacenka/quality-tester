@@ -23,17 +23,9 @@
         <div class="row">
             <h2 class="center-align">Software Parameters</h2>
             <form class="col s12" method="POST">
-
-                <!-- <div class="input-field col s12">
-                    <select name="simulate_pictures">
-                        <option value="True">ON</option>
-                        <option value="False">OFF</option>
-                    </select>
-                    <label for="simulate_pictures">Dummy Simulation, will not actually check pictures but just simulate a test result anyways</label>
-                </div> -->
-                <div name="dummy-simulation">
-                    <label for="dummy-simulation">Picture Check Mode</label>
-                    <p >
+                <div class="input-field col s12">
+                    <p>Picture Check Mode</p>
+                    <p name="dummy-simulation">
                         <label>
                           <input name="simulate_pictures" type="radio" {% if simulate_pictures %}checked{% endif %} value="on"/>
                           <span>On - Softwarecheck will return Pass purely by the configured chance and ignore if the correct picture is present</span>
@@ -45,10 +37,10 @@
                           <span>Off - Softwarecheck will only return Pass if the selected picture is found on the USB-stick</span>
                         </label>
                     </p>
-                    <div class="input-field col s12">
                 </div>
-                    <input id="success-rate" type="number" name="success-rate" value="{{ success_rate }}" required>
+                <div class="input-field col s12">
                     <label for="success-rate">Success Rate in %</label>
+                    <input id="success-rate" type="number" name="success-rate" value="{{ success_rate }}" required>
                 </div>
                 <div class="input-field col s12">
                     <input id="company-name" type="text" name="company-name" value="{{ company_name }}" required>
