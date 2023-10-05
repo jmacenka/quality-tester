@@ -1,7 +1,7 @@
 # Configuration File for default parameters
 default_config = {
     'success_rate': 90, # Successrate in %
-    'company_name': 'ROI-EFESO', # Company name
+    'company_name': 'KOSTAL', # Company name
     'min_wait_time': 10000, # Minimum duration in milliseconds for Test-simulation
     'max_wait_time': 5000,  # Maximum duration in milliseconds for Test-simulation
     'default_user': 'pi', # Default user, needs to be pi, if you want to use a different user some adaptions to the implementation are required
