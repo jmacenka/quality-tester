@@ -1,7 +1,6 @@
 ---
-- name: Configure Raspberry Pi systems with quality tester-software
+- name: Configure Raspberry Pi systems
   hosts: raspberry-pi-inventory
-  gather_facts: true
   become: yes
   vars_files:
     - credentials.yml
@@ -10,12 +9,7 @@
     ansible_ssh_common_args: '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 
   tasks:
-    # Reboot to ensure that the raspberry pi desktop is atually installed and gets booted into
-    - name: Reboot the device
-      reboot:
-        reboot_timeout: 3600
-
-    - name: Update apt cache
+    - name: Update and upgrade the system
       apt:
         # upgrade: yes
         update_cache: yes
@@ -42,18 +36,11 @@
         DISPLAY: ":0.0"
       become_user: pi
 
-    - name: Ensure destination directory is absent
-      file:
-        path: /home/pi/quality-tester
-        state: absent
-      become_user: pi
-
     - name: Clone the repository
       git:
         repo: https://github.com/jmacenka/quality-tester
         dest: /home/pi/quality-tester
         clone: yes
-        update: yes
       become_user: pi
 
     - name: Install Python requirements
@@ -104,13 +91,13 @@
 
         dest: /home/pi/.config/autostart/start_browser.desktop
 
-    - name: Reboot the device
-      reboot:
-        reboot_timeout: 3600
+    # - name: Reboot the device
+    #   reboot:
+    #     reboot_timeout: 3600
 
-    # - name: Shut down the device
-    #   command:
-    #     cmd: "shutdown -h now"
-    #   become: yes
-    #   async: 1
-    #   poll: 0
+    - name: Shut down the device
+      command:
+        cmd: "shutdown -h now"
+      become: yes
+      async: 1
+      poll: 0
